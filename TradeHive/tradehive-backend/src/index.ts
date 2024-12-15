@@ -18,3 +18,20 @@ export const hash = bcrypt
 server.listen(8080, () => {
   console.info('Server is running on http://localhost:8080/graphql')
 })
+
+// // Handle graceful shutdown on process exit
+// const shutdown = () => {
+//   console.info('Closing server...');
+//   server.close((err) => {
+//     if (err) {
+//       console.error('Error while closing server:', err);
+//       process.exit(1);
+//     }
+//     console.info('Server closed successfully');
+//     process.exit(0);
+//   });
+// };
+
+// // Listen for termination signals
+// process.on('SIGINT', shutdown); // Handle Ctrl+C
+// process.on('SIGTERM', shutdown); // Handle termination signal (e.g., from Docker or cloud environment)

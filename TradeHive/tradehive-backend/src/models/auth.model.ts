@@ -1,11 +1,13 @@
 export interface registerRequest {
-  username: string;
-  password: string;  
-  name: string
+  firstName: string;
+  lastName: string;  
+  phone: string
   email: string;
+  address: string;
+  password: string;
 }
 
 export interface loginRequest {
-  username: string;
+  email: string;
   password: string;
 }

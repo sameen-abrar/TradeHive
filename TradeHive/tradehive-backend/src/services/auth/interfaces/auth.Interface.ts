@@ -1,6 +1,6 @@
 import { loginRequest, registerRequest } from "../../../models/auth.model";
 
-export interface IAuth {
+export interface IAuthService {
     /**
      * Registers a new user with the provided details.
      * @param input - The user registration details.

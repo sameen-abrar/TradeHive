@@ -1,17 +1,17 @@
 import { register } from "module";
 import { authService } from "../../services/auth/implementation/auth.service";
-import { IAuth } from "../../services/auth/interfaces/auth.Interface";
+import { IAuthService } from "../../services/auth/interfaces/auth.Interface";
 
-const _authService: IAuth = new authService();
+const _authService: IAuthService = new authService();
 export const authResolvers = {
   Query: {
     login: async (
       _: any,
-      { username, password }: { username: string; password: string }
+      { email, password }: { email: string; password: string }
     ) => {
       try {
         const response = await _authService.login({
-          username: username,
+          email: email,
           password: password,
         });
         console.log("response in resolver", response);
@@ -30,18 +30,22 @@ export const authResolvers = {
     register: async (
       _: any,
       {
-        username,
-        password,
-        name,
+        firstName,
+        lastName,
         email,
-      }: { username: string; password: string; name: string; email: string }
+        address,
+        phone,
+        password
+      }: { firstName: string; lastName: string; email: string; address: string; phone: string; password: string;  }
     ) => {
       try {
         const response = await _authService.register({
-          username: username,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          phone: phone,
+          address: address,
           password: password,
-          name: name,
-          email: email
         });
         console.log("response in resolver", response);
         return response;

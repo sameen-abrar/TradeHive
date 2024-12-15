@@ -1,13 +1,13 @@
 import { hash, prisma } from "../../..";
 import { loginRequest, registerRequest } from "../../../models/auth.model";
-import { IAuth } from "../interfaces/auth.Interface";
+import { IAuthService } from "../interfaces/auth.Interface";
 
-export class authService implements IAuth{
+export class authService implements IAuthService{
     async login(input: loginRequest): Promise<boolean> {
         try {
             // Find the user by username
             const auth = await prisma.auth.findUnique({
-              where: { userName: input.username },
+              where: { email: input.email },
             });
     
             console.log('User Found:', auth);
@@ -39,8 +39,10 @@ export class authService implements IAuth{
     async register(input: registerRequest): Promise<string | object> {
         const user = await prisma.user.create({
            data: {
-            name: input.name,
-            email: input.email,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            phone: input.phone,
+            address: input.address,
             createdAt: new Date()
            } 
         });
@@ -49,14 +51,14 @@ export class authService implements IAuth{
             const hashedPassword: string = await hash.hash(input.password, 10);
             const auth = await prisma.auth.create({
                 data:{
-                    userName: input.username,
+                    email: input.email,
                     userId: user.id,
                     password: input.password,
                     hashedPassword: hashedPassword,
                     createdAt: new Date()
                 }                
             })            
-            return `${user.name} inserted successfully`; 
+            return `${user.firstName} inserted successfully`; 
         }
 
         return "There was an error"

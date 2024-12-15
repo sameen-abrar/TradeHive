@@ -15,7 +15,7 @@ datasource db {
 
 model Auth {
   id             Int       @id @default(autoincrement())
-  email          String?    @unique
+  email          String?   @unique
   password       String?
   hashedPassword String    @map("hashed_password")
   createdAt      DateTime? @map("created_at")
@@ -44,6 +44,7 @@ model Product {
   description String?
   price       Float?
   rentPrice   Float?            @map("rent_price")
+  rentType    String?            @map("rent_type")
   createdAt   DateTime?         @map("created_at")
   updatedAt   DateTime?         @map("updated_at")
   categoroies ProductCategory[]

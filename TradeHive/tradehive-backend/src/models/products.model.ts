@@ -3,6 +3,7 @@ export interface productRequest {
     description: string; // Detailed description of the product
     price: number; // Selling price of the product
     rentPrice: number; // Rental price of the product
+    rentType: string; // Rental price of the product
     categoryIds: number[]; // Array of related category Ids
   }
 

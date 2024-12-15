@@ -38,6 +38,7 @@ export interface IProduct {
         description?: string;
         price?: number;
         rentPrice?: number;
+        rentType?: string; 
         categoryIds?: number[];
       }
     ): Promise<boolean>;

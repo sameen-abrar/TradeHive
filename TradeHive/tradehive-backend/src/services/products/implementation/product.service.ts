@@ -14,6 +14,7 @@ export class productService implements IProductService {
           description: input.description,
           price: input.price,
           rentPrice: input.rentPrice,
+          rentType: input.rentType,
           createdAt: new Date(),
         },
       });
@@ -42,17 +43,38 @@ export class productService implements IProductService {
   getProduct(productId: number): Promise<productResponse | null> {
     throw new Error("Method not implemented.");
   }
-  updateProduct(
+  async updateProduct(
     productId: number,
     data: {
       title?: string;
       description?: string;
       price?: number;
       rentPrice?: number;
+      rentType?: string;
       categoryIds?: number[];
     }
   ): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    // Find the product by ID
+    const product = await prisma.product.findUnique({
+      where: {id: productId}
+    });
+
+    // If product doesn't exist, return an error message
+    if (!product) {
+      return false;
+    }    
+
+    // Update the product with the new values
+    const updatedProduct = await prisma.product.update({
+      where:{
+        id: productId
+      },
+      data: data
+    }
+    );
+
+    // Return a success message
+    return true
   }
   deleteProduct(productId: number): Promise<boolean> {
     throw new Error("Method not implemented.");

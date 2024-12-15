@@ -76,7 +76,24 @@ export class productService implements IProductService {
     // Return a success message
     return true
   }
-  deleteProduct(productId: number): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async deleteProduct(productId: number): Promise<boolean> {
+    try{
+      await prisma.productCategory.deleteMany({
+        where: {
+          productId: productId
+        }
+      });
+
+      await prisma.product.delete({
+        where:{
+          id: productId
+        }
+      });
+
+      return true
+    }catch (error) {
+      console.error("Error deleting product:", error);
+      throw new Error("Failed to delete product"); 
+    }
   }
 }

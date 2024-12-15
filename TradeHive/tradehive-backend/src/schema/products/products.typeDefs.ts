@@ -1,6 +1,7 @@
 export const productTypeDefs = /* GraphQL */ `
   type Query {
     getProduct(productId: Int): Boolean
+    deleteProduct(productId: Int): Boolean
   }
   type Mutation {
     addProduct(

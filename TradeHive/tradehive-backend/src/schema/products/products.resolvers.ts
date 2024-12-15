@@ -4,7 +4,31 @@ import { prisma } from "../..";
 
 const _productService: IProduct = new productService();
 export const productResolvers = {
-  Query: {},
+  Query: {
+    deleteProduct: async (
+      _: any,
+      {
+        productId
+      }:
+      {
+        productId: number
+      }
+    ) => {
+      try{
+        console.log("pro: ", productId)
+        const response = await _productService.deleteProduct(productId);
+
+        return response
+      }catch (error) {
+        if (error instanceof Error) {
+          console.error("Error in delete product resolver:", error.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+        throw new Error("deletion failed");
+      }
+    }
+  },
   Mutation: {
     addProduct: async (
       _: any,

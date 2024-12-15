@@ -1,6 +1,6 @@
 export const productTypeDefs = /* GraphQL */ `
   type Query {
-    getProduct(productId: Int): Boolean
+    getAllProducts: [ProductListResponse]
     deleteProduct(productId: Int): Boolean
   }
   type Mutation {
@@ -20,5 +20,14 @@ export const productTypeDefs = /* GraphQL */ `
       rentPrice: Float
       rentType: String
     ): String
+  }
+  type ProductListResponse {
+    title: String!
+    description: String!
+    price: Float!
+    rentPrice: Float!
+    rentType: String
+    categories: [String!]!
+    createdAt: String!
   }
 `;

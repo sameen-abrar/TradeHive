@@ -5,21 +5,13 @@ import { prisma } from "../..";
 const _productService: IProduct = new productService();
 export const productResolvers = {
   Query: {
-    deleteProduct: async (
-      _: any,
-      {
-        productId
-      }:
-      {
-        productId: number
-      }
-    ) => {
-      try{
-        console.log("pro: ", productId)
+    deleteProduct: async (_: any,{productId}: {productId: number}) => {
+      try {
+        console.log("pro: ", productId);
         const response = await _productService.deleteProduct(productId);
 
-        return response
-      }catch (error) {
+        return response;
+      } catch (error) {
         if (error instanceof Error) {
           console.error("Error in delete product resolver:", error.message);
         } else {
@@ -27,7 +19,12 @@ export const productResolvers = {
         }
         throw new Error("deletion failed");
       }
-    }
+    },
+    getAllProducts: async (_: any) => {
+        const products = await _productService.getAllProducts()
+
+        return products
+    },
   },
   Mutation: {
     addProduct: async (
@@ -89,16 +86,13 @@ export const productResolvers = {
     ) => {
       try {
         console.log("here:", productId);
-        const response = await _productService.updateProduct(
-          productId,
-          {
+        const response = await _productService.updateProduct(productId, {
           title: title,
           description: description,
           price: price,
           rentPrice: rentPrice,
-          rentType: rentType
-        }
-        );
+          rentType: rentType,
+        });
         console.log("Product updated with ID:", productId);
         return `Product with ID ${productId} created successfully`;
       } catch (error) {

@@ -1,11 +1,42 @@
 import { prisma } from "../../..";
 import {
+  productListResponse,
   productRequest,
   productResponse,
 } from "../../../models/products.model";
 import { IProduct as IProductService } from "../interfaces/product.interface";
 
 export class productService implements IProductService {
+  async getAllProducts(): Promise<productListResponse[] | null> {
+    try {
+      const products = await prisma.product.findMany({
+        include: {
+          categories: {
+            include: {
+              category: true, // Include category details
+            },
+          },
+        },
+      });
+
+      const productList: productListResponse[] = products.map((product) => ({
+        title: product.title,
+        description: product.description ?? "",
+        price: product.price ?? 0,
+        rentPrice: product.rentPrice ?? 0,
+        rentType: product.rentType ?? "",
+        categories: product.categories.map((cat) => cat.category.name), // Extract category names
+        createdAt: product.createdAt ?? new Date,
+      }));
+
+      return productList
+
+
+    } catch (error) {
+      console.error("Error fetching products:", error); // Log the error for debugging
+      throw new Error("Failed to fetch products"); // Throw a user-friendly error
+    }
+  }
   async createProduct(input: productRequest): Promise<number> {
     try {
       const product = await prisma.product.create({
@@ -19,14 +50,14 @@ export class productService implements IProductService {
         },
       });
 
-      console.log("Ids Product cat",input.categoryIds)
+      console.log("Ids Product cat", input.categoryIds);
 
       if (product != null) {
         const categoryEntries = input.categoryIds.map((categoryId) => ({
           productId: product.id,
           categoryId: categoryId,
           createdAt: new Date(),
-          updatedAt: null
+          updatedAt: null,
         }));
 
         await prisma.productCategory.createMany({
@@ -56,44 +87,43 @@ export class productService implements IProductService {
   ): Promise<boolean> {
     // Find the product by ID
     const product = await prisma.product.findUnique({
-      where: {id: productId}
+      where: { id: productId },
     });
 
     // If product doesn't exist, return an error message
     if (!product) {
       return false;
-    }    
+    }
 
     // Update the product with the new values
     const updatedProduct = await prisma.product.update({
-      where:{
-        id: productId
+      where: {
+        id: productId,
       },
-      data: data
-    }
-    );
+      data: data,
+    });
 
     // Return a success message
-    return true
+    return true;
   }
   async deleteProduct(productId: number): Promise<boolean> {
-    try{
+    try {
       await prisma.productCategory.deleteMany({
         where: {
-          productId: productId
-        }
+          productId: productId,
+        },
       });
 
       await prisma.product.delete({
-        where:{
-          id: productId
-        }
+        where: {
+          id: productId,
+        },
       });
 
-      return true
-    }catch (error) {
+      return true;
+    } catch (error) {
       console.error("Error deleting product:", error);
-      throw new Error("Failed to delete product"); 
+      throw new Error("Failed to delete product");
     }
   }
 }

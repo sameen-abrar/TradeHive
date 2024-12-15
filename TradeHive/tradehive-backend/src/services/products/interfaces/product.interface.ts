@@ -1,4 +1,4 @@
-import { productRequest, productResponse } from "../../../models/products.model";
+import { productListResponse, productRequest, productResponse } from "../../../models/products.model";
 
 /**
  * Interface for Product operations including Create, Read, Update, and Delete.
@@ -49,5 +49,12 @@ export interface IProduct {
      * @returns A promise that resolves to `true` if the deletion was successful or `false` if the product does not exist.
      */
     deleteProduct(productId: number): Promise<boolean>;
+
+    /**
+     * Retrieves details of a product by its ID.
+     * @param productId - The unique identifier of the product to retrieve.
+     * @returns A promise that resolves to the product details or null if the product does not exist.
+     */
+    getAllProducts(): Promise<productListResponse[] | null>;
   }
   

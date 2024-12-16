@@ -51,10 +51,15 @@ export interface IProduct {
     deleteProduct(productId: number): Promise<boolean>;
 
     /**
-     * Retrieves details of a product by its ID.
-     * @param productId - The unique identifier of the product to retrieve.
-     * @returns A promise that resolves to the product details or null if the product does not exist.
+     * Retrieves all products.
+     * @returns A promise that resolves to the product list or null if the product does not exist.
      */
     getAllProducts(): Promise<productListResponse[] | null>;
+
+    /**
+     * Accepts Rent a product.
+     * @returns A promise that resolves to false if the product was not rented.
+     */
+    rentProduct(userId: number, productId: number, fromDate: Date, toDate: Date): Promise<boolean>;
   }
   

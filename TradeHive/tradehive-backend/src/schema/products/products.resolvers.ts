@@ -104,5 +104,34 @@ export const productResolvers = {
         throw new Error("Failed to add product");
       }
     },
+    rentProduct: async (
+      _: any,
+      {
+        productId,
+        userId,
+        fromDate,
+        toDate,
+      }: {
+        productId: number;
+        userId: number;
+        fromDate: Date;
+        toDate: Date;
+      }
+    ) => {
+      try {
+        console.log("datXXXXXXXXXXXe", fromDate)
+        const response = await _productService.rentProduct(
+          userId, productId, fromDate, toDate
+        )
+        return response
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error in rentProduct resolver:", error.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+        throw new Error("Failed to add product");
+      }
+    },
   },
 };

@@ -7,6 +7,42 @@ import {
 import { IProduct as IProductService } from "../interfaces/product.interface";
 
 export class productService implements IProductService {
+  async rentProduct(
+    userId: number,
+    productId: number,
+    fromDate: Date,
+    toDate: Date
+  ): Promise<boolean> {
+    try {
+      
+      console.log("rent service product Id: ", userId)
+      const product = await prisma.product.findFirst({
+        where:{
+          id: productId
+        }
+      })
+      console.log("rent service product: ", product)
+      const rental = await prisma.rentalBooking.create({
+        data: {
+          userId: userId,
+          productId: productId,
+          fromDate: fromDate,
+          toDate: toDate,
+          createdAt: new Date(),
+        },
+      });
+
+      console.log("rent service: ", rental)
+
+      if (rental != null) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error fetching products:", error); // Log the error for debugging
+      throw new Error("Failed to fetch products"); // Throw a user-friendly error
+    }
+  }
   async getAllProducts(): Promise<productListResponse[] | null> {
     try {
       const products = await prisma.product.findMany({
@@ -26,12 +62,10 @@ export class productService implements IProductService {
         rentPrice: product.rentPrice ?? 0,
         rentType: product.rentType ?? "",
         categories: product.categories.map((cat) => cat.category.name), // Extract category names
-        createdAt: product.createdAt ?? new Date,
+        createdAt: product.createdAt ?? new Date(),
       }));
 
-      return productList
-
-
+      return productList;
     } catch (error) {
       console.error("Error fetching products:", error); // Log the error for debugging
       throw new Error("Failed to fetch products"); // Throw a user-friendly error

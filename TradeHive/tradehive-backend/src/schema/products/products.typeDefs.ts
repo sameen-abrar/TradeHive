@@ -1,4 +1,8 @@
+import { productResponse } from "./products.responseModel";
+
 export const productTypeDefs = /* GraphQL */ `
+  ${productResponse}
+  scalar Date
   type Query {
     getAllProducts: [ProductListResponse]
     deleteProduct(productId: Int): Boolean
@@ -20,14 +24,11 @@ export const productTypeDefs = /* GraphQL */ `
       rentPrice: Float
       rentType: String
     ): String
-  }
-  type ProductListResponse {
-    title: String!
-    description: String!
-    price: Float!
-    rentPrice: Float!
-    rentType: String
-    categories: [String!]!
-    createdAt: String!
+    rentProduct(
+      productId: Int!
+      userId: Int!,
+      fromDate: Date!,
+      toDate: Date!
+    ):Boolean
   }
 `;

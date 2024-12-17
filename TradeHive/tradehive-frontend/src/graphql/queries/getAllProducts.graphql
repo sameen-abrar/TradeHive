@@ -10,3 +10,15 @@ query getAll {
     createdAt
   }
 }
+
+query getProductById($productId: Int!){
+  getProduct(productId: $productId) {
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}

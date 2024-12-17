@@ -8,4 +8,15 @@ export const productResponse = /* GraphQL */ `
     categories: [String!]!
     createdAt: String!
   }
+  type productResponseModel {
+  id: Int!
+  title: String!
+  description: String!
+  price: Int!
+  rentPrice: String!
+  rentType: String! 
+  categories: [String!]
+  createdAt: Date
+  updatedAt: Date
+}
 `;

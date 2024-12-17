@@ -5,7 +5,7 @@ import { prisma } from "../..";
 const _productService: IProduct = new productService();
 export const productResolvers = {
   Query: {
-    deleteProduct: async (_: any,{productId}: {productId: number}) => {
+    deleteProduct: async (_: any, { productId }: { productId: number }) => {
       try {
         console.log("pro: ", productId);
         const response = await _productService.deleteProduct(productId);
@@ -21,9 +21,14 @@ export const productResolvers = {
       }
     },
     getAllProducts: async (_: any) => {
-        const products = await _productService.getAllProducts()
+      const products = await _productService.getAllProducts();
 
-        return products
+      return products;
+    },
+    getProduct: async (_: any, { productId }: { productId: number }) => {
+      const product = await _productService.getProduct(productId);
+
+      return product;
     },
   },
   Mutation: {
@@ -119,11 +124,14 @@ export const productResolvers = {
       }
     ) => {
       try {
-        console.log("datXXXXXXXXXXXe", fromDate)
+        console.log("datXXXXXXXXXXXe", fromDate);
         const response = await _productService.rentProduct(
-          userId, productId, fromDate, toDate
-        )
-        return response
+          userId,
+          productId,
+          fromDate,
+          toDate
+        );
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           console.error("Error in rentProduct resolver:", error.message);
@@ -148,10 +156,8 @@ export const productResolvers = {
       }
     ) => {
       try {
-        const response = await _productService.buyProduct(
-          userId, productId
-        )
-        return response
+        const response = await _productService.buyProduct(userId, productId);
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           console.error("Error in buyProduct resolver:", error.message);

@@ -13,14 +13,13 @@ export interface productResponse {
   description: string; // Detailed description of the product
   price: number; // Selling price of the product
   rentPrice: number; // Rental price of the product
-  rentType: number; // Rental price of the product
-  categories: Category[]; // Array of related categories
+  rentType: string; // Rental price of the product
+  categories: string[]; // Array of related categories
   createdAt: Date; // Date when the product was created
   updatedAt: Date; // Date when the product was last updated
 }
 
 export interface Category {
-  id: number; // Unique identifier for the category
   name: string; // Name of the category (e.g., ELECTRONICS, FURNITURE)
   products: productRequest[]; // Array of products in this category
   createdAt: Date; // Date when the category was created

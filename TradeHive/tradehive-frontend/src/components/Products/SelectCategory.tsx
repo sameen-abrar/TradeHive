@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, MultiSelect, Select, Title } from "@mantine/core";
+import { Box, MultiSelect, Title } from "@mantine/core";
 import { ProductFormData } from "./ProductTitle";
 
 interface Props {

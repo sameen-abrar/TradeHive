@@ -137,8 +137,39 @@ export class productService implements IProductService {
       throw new Error("Failed to create product"); // Throw a user-friendly error
     }
   }
-  getProduct(productId: number): Promise<productResponse | null> {
-    throw new Error("Method not implemented.");
+  async getProduct(productId: number): Promise<productResponse | null> {
+    const product = await prisma.product.findFirst({
+      where: {
+        id: productId,
+      },
+      include:{
+        categories:{
+          include:{
+            category: true
+          }
+        }
+      }
+
+    });
+
+    if (!product) {
+      return null; // If no product is found, return null.
+    }
+
+    const productResponse: productResponse = {
+      id: product.id,
+      title: product.title,
+      price: product.price ?? 0,
+      description: product.description ?? "",
+      rentPrice: product.rentPrice ?? 0,
+      rentType: product.rentType ?? "",
+      categories: product.categories.map(c => c.category.name),
+      createdAt: product.createdAt ?? new Date(),
+      updatedAt: product.updatedAt ?? new Date()
+    };
+
+    return productResponse
+
   }
   async updateProduct(
     productId: number,

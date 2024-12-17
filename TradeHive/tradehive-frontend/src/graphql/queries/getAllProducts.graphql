@@ -1,3 +1,4 @@
+
 query getAll {
   getAllProducts {
     title

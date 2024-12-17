@@ -1,36 +1,35 @@
-import React from 'react';
-
-interface Product {
-  title: string;
-  description: string;
-  price: number;
-  rentPrice: number;
-  rentType: string;
-  categories: string[];
-  createdAt: string;
-}
+import React from "react";
+import { ProductListResponse } from "../../gql/graphql";
+import { Badge, Box, Card, Container, Text } from "@mantine/core";
+import "./ProductList.css";
 
 interface ProductListProps {
-  products: Product[];
+  products: Array<ProductListResponse>;
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   return (
-    <div>
-      <h2>Product List</h2>
-      <ul>
-        {products.map((product, index) => (
-          <li key={index}>
-            <h3>{index + 1}. {product.title}</h3>
-            <p>{product.description}</p>
-            <p>Price: ${product.price}</p>
-            <p>Rent Price: ${product.rentPrice} ({product.rentType})</p>
-            <p>Categories: {product.categories.join(', ')}</p>
-            <p>Created At: {new Date(parseInt(product.createdAt)).toLocaleDateString()}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Box className="Box">
+      {products.map((product, index) => {
+        return (
+          <Container key={index} fluid>
+            <Card key={index} shadow="sm" padding="lg" className="Items">
+              <Text fw={500}>{product.title}</Text>
+              <div>
+                {product.categories.map((category, idx) => (
+                  <Badge key={idx} color="blue" style={{ marginTop: 10 }}>
+                    {category}
+                  </Badge>
+                ))}
+              </div>
+              <Text size="sm">Price: ${product.price}</Text>
+              <Text size="sm">{product.description}</Text>
+              <Text size="sm">Date published: ${product.createdAt}</Text>
+            </Card>
+          </Container>
+        );
+      })}
+    </Box>
   );
 };
 

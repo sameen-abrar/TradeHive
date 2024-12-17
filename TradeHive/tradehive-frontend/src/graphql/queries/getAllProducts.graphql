@@ -1,0 +1,11 @@
+query getAll {
+  getAllProducts {
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}

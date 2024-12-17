@@ -1,14 +1,15 @@
 import { Container, Paper, Title } from "@mantine/core";
 import LoginForm from "../components/Auth/LoginForm";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   return (
-      <Container size="xs" mt="xl">
+      <Container>
         <Paper p="xl" shadow="xs" withBorder>
           <Title order={2}>Login</Title>
           <LoginForm />
           <p>Don't have an account?</p>
-          <a>Sign Up!</a>
+          <Link to="/register">Sign Up!</Link>
         </Paper>
       </Container>
   );

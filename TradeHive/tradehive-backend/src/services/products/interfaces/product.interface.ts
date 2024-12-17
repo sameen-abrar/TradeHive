@@ -61,5 +61,11 @@ export interface IProduct {
      * @returns A promise that resolves to false if the product was not rented.
      */
     rentProduct(userId: number, productId: number, fromDate: Date, toDate: Date): Promise<boolean>;
+
+    /**
+     * Accepts Rent a product.
+     * @returns A promise that resolves to false if the product was not rented.
+     */
+    buyProduct(userId: number, productId: number): Promise<boolean>;
   }
   

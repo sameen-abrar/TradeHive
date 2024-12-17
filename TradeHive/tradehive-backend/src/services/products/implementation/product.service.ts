@@ -7,6 +7,38 @@ import {
 import { IProduct as IProductService } from "../interfaces/product.interface";
 
 export class productService implements IProductService {
+  async buyProduct(userId: number, productId: number): Promise<boolean> {
+    try {
+      
+      console.log("rent service product Id: ", userId)
+      const product = await prisma.product.findFirst({
+        where:{
+          id: productId
+        }
+      })
+
+      if(product == null) 
+        return false;
+      
+      const buy = await prisma.invoice.create({
+        data: {
+          userId: userId,
+          productId: productId,
+          createdAt: new Date(),
+        },
+      });
+
+      console.log("product service: ", buy)
+
+      if (buy != null) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error buying:", error); // Log the error for debugging
+      throw new Error("Failed to buy products"); // Throw a user-friendly error
+    }
+  }
   async rentProduct(
     userId: number,
     productId: number,

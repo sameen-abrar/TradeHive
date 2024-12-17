@@ -133,5 +133,33 @@ export const productResolvers = {
         throw new Error("Failed to add product");
       }
     },
+    buyProduct: async (
+      _: any,
+      {
+        productId,
+        userId,
+        fromDate,
+        toDate,
+      }: {
+        productId: number;
+        userId: number;
+        fromDate: Date;
+        toDate: Date;
+      }
+    ) => {
+      try {
+        const response = await _productService.buyProduct(
+          userId, productId
+        )
+        return response
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error in buyProduct resolver:", error.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+        throw new Error("Failed to buy product");
+      }
+    },
   },
 };

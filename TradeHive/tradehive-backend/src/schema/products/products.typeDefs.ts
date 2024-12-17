@@ -30,5 +30,9 @@ export const productTypeDefs = /* GraphQL */ `
       fromDate: Date!,
       toDate: Date!
     ):Boolean
+    buyProduct(
+      productId: Int!
+      userId: Int!
+    ):Boolean
   }
 `;

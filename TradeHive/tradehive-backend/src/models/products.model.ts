@@ -5,6 +5,7 @@ export interface productRequest {
     rentPrice: number; // Rental price of the product
     rentType: string; // Rental price of the product
     categoryIds: number[]; // Array of related category Ids
+    createdBy: number; // Date when the product was created
   }
 
 export interface productResponse {
@@ -15,6 +16,7 @@ export interface productResponse {
   rentPrice: number; // Rental price of the product
   rentType: string; // Rental price of the product
   categories: string[]; // Array of related categories
+  createdBy: number; // Date when the product was created
   createdAt: Date; // Date when the product was created
   updatedAt: Date; // Date when the product was last updated
 }

@@ -7,19 +7,51 @@ import {
 import { IProduct as IProductService } from "../interfaces/product.interface";
 
 export class productService implements IProductService {
+  async getProductsByUserId(
+    userId: number
+  ): Promise<productListResponse[] | null> {
+    try {
+      const products = await prisma.product.findMany({
+        where: {
+          createdBy: userId,
+        },
+        include: {
+          categories: {
+            include: {
+              category: true, // Include category details
+            },
+          },
+        },
+      });
+
+      const productList: productListResponse[] = products.map((product) => ({
+        id: product.id,
+        title: product.title,
+        description: product.description ?? "",
+        price: product.price ?? 0,
+        rentPrice: product.rentPrice ?? 0,
+        rentType: product.rentType ?? "",
+        categories: product.categories.map((cat) => cat.category.name), // Extract category names
+        createdAt: product.createdAt ?? new Date(),
+      }));
+
+      return productList;
+    } catch (error) {
+      console.error("Error fetching products:", error); // Log the error for debugging
+      throw new Error("Failed to fetch products"); // Throw a user-friendly error
+    }
+  }
   async buyProduct(userId: number, productId: number): Promise<boolean> {
     try {
-      
-      console.log("rent service product Id: ", userId)
+      console.log("rent service product Id: ", userId);
       const product = await prisma.product.findFirst({
-        where:{
-          id: productId
-        }
-      })
+        where: {
+          id: productId,
+        },
+      });
 
-      if(product == null) 
-        return false;
-      
+      if (product == null) return false;
+
       const buy = await prisma.invoice.create({
         data: {
           userId: userId,
@@ -28,7 +60,7 @@ export class productService implements IProductService {
         },
       });
 
-      console.log("product service: ", buy)
+      console.log("product service: ", buy);
 
       if (buy != null) {
         return true;
@@ -46,14 +78,13 @@ export class productService implements IProductService {
     toDate: Date
   ): Promise<boolean> {
     try {
-      
-      console.log("rent service product Id: ", userId)
+      console.log("rent service product Id: ", userId);
       const product = await prisma.product.findFirst({
-        where:{
-          id: productId
-        }
-      })
-      console.log("rent service product: ", product)
+        where: {
+          id: productId,
+        },
+      });
+      console.log("rent service product: ", product);
       const rental = await prisma.rentalBooking.create({
         data: {
           userId: userId,
@@ -64,7 +95,7 @@ export class productService implements IProductService {
         },
       });
 
-      console.log("rent service: ", rental)
+      console.log("rent service: ", rental);
 
       if (rental != null) {
         return true;
@@ -88,6 +119,7 @@ export class productService implements IProductService {
       });
 
       const productList: productListResponse[] = products.map((product) => ({
+        id: product.id,
         title: product.title,
         description: product.description ?? "",
         price: product.price ?? 0,
@@ -113,6 +145,7 @@ export class productService implements IProductService {
           rentPrice: input.rentPrice,
           rentType: input.rentType,
           createdAt: new Date(),
+          createdBy: input.createdBy,
         },
       });
 
@@ -142,14 +175,13 @@ export class productService implements IProductService {
       where: {
         id: productId,
       },
-      include:{
-        categories:{
-          include:{
-            category: true
-          }
-        }
-      }
-
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+      },
     });
 
     if (!product) {
@@ -163,13 +195,13 @@ export class productService implements IProductService {
       description: product.description ?? "",
       rentPrice: product.rentPrice ?? 0,
       rentType: product.rentType ?? "",
-      categories: product.categories.map(c => c.category.name),
+      categories: product.categories.map((c) => c.category.name),
       createdAt: product.createdAt ?? new Date(),
-      updatedAt: product.updatedAt ?? new Date()
+      updatedAt: product.updatedAt ?? new Date(),
+      createdBy: product.createdBy ?? -1,
     };
 
-    return productResponse
-
+    return productResponse;
   }
   async updateProduct(
     productId: number,

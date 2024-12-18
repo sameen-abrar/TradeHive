@@ -13,5 +13,5 @@ export interface IAuthService {
      * @param input - The user login credentials.
      * @returns A promise resolving to a boolean or a token if successful.
      */
-    login(input: loginRequest): Promise<boolean>;
+    login(input: loginRequest): Promise<number>;
   }

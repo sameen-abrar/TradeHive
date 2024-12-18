@@ -55,6 +55,7 @@ export interface IProduct {
      * @returns A promise that resolves to the product list or null if the product does not exist.
      */
     getAllProducts(): Promise<productListResponse[] | null>;
+    getProductsByUserId(userId: number): Promise<productListResponse[] | null>;
 
     /**
      * Accepts Rent a product.

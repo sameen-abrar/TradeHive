@@ -7,6 +7,7 @@ export const productTypeDefs = /* GraphQL */ `
     getAllProducts: [ProductListResponse]
     deleteProduct(productId: Int): Boolean
     getProduct(productId: Int): productResponseModel
+    getProductsByUserId(userId: Int): [ProductListResponse]
   }
   type Mutation {
     addProduct(
@@ -16,7 +17,8 @@ export const productTypeDefs = /* GraphQL */ `
       rentPrice: Float!
       rentType: String
       categoryIds: [Int!]!
-    ): String
+      createdBy: Int!
+    ): Int!
     updateProduct(
       productId: Int!
       title: String

@@ -3,7 +3,7 @@ import { loginRequest, registerRequest } from "../../../models/auth.model";
 import { IAuthService } from "../interfaces/auth.Interface";
 
 export class authService implements IAuthService{
-    async login(input: loginRequest): Promise<boolean> {
+    async login(input: loginRequest): Promise<number> {
         try {
             // Find the user by username
             const auth = await prisma.auth.findUnique({
@@ -14,18 +14,18 @@ export class authService implements IAuthService{
     
             // If user is not found, throw an error
             if (!auth) {
-              return false;
+              return -1;
             }
     
             // Compare the provided password with the stored hashed password
             const isPasswordValid = await hash.compare(input.password, auth.hashedPassword);
     
             if (!isPasswordValid) {
-              return false;
+              return -1;
             }
     
             // Return true if both username and password are valid
-            return true;
+            return auth.userId ?? -1;
           } catch (error) {
               if (error instanceof Error) {
                   console.error('Error in login resolver:', error.message);
@@ -58,7 +58,7 @@ export class authService implements IAuthService{
                     createdAt: new Date()
                 }                
             })            
-            return `${user.firstName} inserted successfully`; 
+            return `${auth.email} inserted successfully`; 
         }
 
         return "There was an error"

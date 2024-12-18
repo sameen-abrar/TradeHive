@@ -25,6 +25,11 @@ export const productResolvers = {
 
       return products;
     },
+    getProductsByUserId: async (_: any, { userId }: { userId: number }) => {
+      const products = await _productService.getProductsByUserId(userId);
+
+      return products;
+    },
     getProduct: async (_: any, { productId }: { productId: number }) => {
       const product = await _productService.getProduct(productId);
 
@@ -41,6 +46,7 @@ export const productResolvers = {
         rentPrice,
         rentType,
         categoryIds,
+        createdBy
       }: {
         title: string;
         description: string;
@@ -48,6 +54,7 @@ export const productResolvers = {
         rentPrice: number;
         rentType: string;
         categoryIds: number[];
+        createdBy: number;
       }
     ) => {
       try {
@@ -59,9 +66,10 @@ export const productResolvers = {
           rentPrice: rentPrice,
           rentType: rentType,
           categoryIds: categoryIds,
+          createdBy: createdBy,
         });
         console.log("Product created with ID:", response);
-        return `Product with ID ${response} created successfully`;
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           console.error("Error in addProduct resolver:", error.message);

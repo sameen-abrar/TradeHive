@@ -9,10 +9,12 @@ import {
   Modal,
 } from "@mantine/core"; // Mantine components for UI
 import { useGetProductByIdQuery } from "../../gql/graphql";
-import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 
 const ProductDetailsPage = () => {
+  // Get productId from URL parameters
+  const { id } = useParams();
+  console.log('product id: ', id)
   // State to control modal visibility
   const [opened, setOpened] = useState(false);
 
@@ -21,8 +23,6 @@ const ProductDetailsPage = () => {
 
   // Function to close the modal
   const close = () => setOpened(false);
-  // Get productId from URL parameters
-  const { id } = useParams<{ id: string }>();
   // Ensure the id is available before making the query
   if (!id) {
     return <Text>Error: Product ID is missing</Text>; // Or redirect if id is required
@@ -60,16 +60,29 @@ const ProductDetailsPage = () => {
           Created at: {new Date(getProduct?.createdAt).toLocaleDateString()}
         </Text>
         {/* Modal Component */}
-        <Modal opened={opened} onClose={close} title="Do you want to buy?" centered>
+        <Modal
+          opened={opened}
+          onClose={close}
+          title="Do you want to buy?"
+          centered
+        >
           <Text>Are you sure you want to buy this product?</Text>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "20px",
+            }}
+          >
             <Button variant="default" onClick={close}>
               No, Cancel
             </Button>
-            <Button onClick={() => { 
-              // Handle buying logic here
-              close();
-            }}>
+            <Button
+              onClick={() => {
+                // Handle buying logic here
+                close();
+              }}
+            >
               Yes, Buy
             </Button>
           </div>

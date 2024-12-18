@@ -3,10 +3,92 @@ import {
   productListResponse,
   productRequest,
   productResponse,
+  UserProductsResponse,
 } from "../../../models/products.model";
 import { IProduct as IProductService } from "../interfaces/product.interface";
 
 export class productService implements IProductService {
+  async getUserProducts(userId: number): Promise<UserProductsResponse | null> {
+    try {
+      // Fetch products bought, sold, borrowed, and lent
+      const [bought, sold, borrowed, lent] = await Promise.all([
+        // Products bought by the user (from Invoice table)
+        prisma.invoice.findMany({
+          where: { userId },
+          include: {
+            product: {
+              include: {
+                categories: { include: { category: true } },
+              },
+            },
+          },
+        }),
+
+        // Products sold by the user (user is createdBy)
+        prisma.product.findMany({
+          where: { createdBy: userId,
+            invoices: {
+              some: { productId: { not: undefined } },  // Ensure the product exists in the invoices table
+            },
+          },
+          include: {
+            categories: { include: { category: true } },
+          },
+        }),
+
+        // Products borrowed by the user (from RentalBooking table)
+        prisma.rentalBooking.findMany({
+          where: { userId },
+          include: {
+            product: {
+              include: {
+                categories: { include: { category: true } },
+              },
+            },
+          },
+        }),
+
+        // Products lent by the user (products where others have booked)
+        prisma.product.findMany({
+          where: { createdBy: userId,
+            rentalBookings: {
+              some: { productId: { not: undefined } },  // Ensure the product exists in the invoices table
+            },
+          },
+          include: {
+            categories: { include: { category: true } },
+          },
+        }),
+      ]);
+
+      // Helper function to format products
+      const formatProduct = (data: any): productResponse => ({
+        id: data.product?.id || data.id,
+        title: data.product?.title || data.title,
+        description: data.product?.description || "",
+        price: data.product?.price || 0,
+        rentPrice: data.product?.rentPrice || 0,
+        rentType: data.product?.rentType || "",
+        categories:
+          data.product?.categories?.map((cat: any) => cat.category.name) || [],
+        createdBy: data.product?.createdBy || data.createdBy || 0,
+        createdAt: data.product?.createdAt || data.createdAt,
+        updatedAt: data.product?.updatedAt || data.updatedAt,
+      });
+
+      // Organize response
+      return <UserProductsResponse>{
+        bought: bought.map((item) => formatProduct(item.product)),
+        sold: sold.map(formatProduct),
+        borrowed: borrowed.map((item) => formatProduct(item.product)),
+        lent: lent.map(formatProduct),
+      };
+    } catch (error) {
+      console.error("Error fetching products:", error); // Log the error for debugging
+      throw new Error("Failed to fetch products"); // Throw a user-friendly error
+    }
+  }
+
   async getProductsByUserId(
     userId: number
   ): Promise<productListResponse[] | null> {
@@ -14,6 +96,9 @@ export class productService implements IProductService {
       const products = await prisma.product.findMany({
         where: {
           createdBy: userId,
+          invoices: {
+            none: {}, // No sold products shown
+          },
         },
         include: {
           categories: {
@@ -109,6 +194,11 @@ export class productService implements IProductService {
   async getAllProducts(): Promise<productListResponse[] | null> {
     try {
       const products = await prisma.product.findMany({
+        where: {
+          invoices: {
+            none: {}, // No sold products shown
+          },
+        },
         include: {
           categories: {
             include: {
@@ -174,6 +264,9 @@ export class productService implements IProductService {
     const product = await prisma.product.findFirst({
       where: {
         id: productId,
+        invoices: {
+          none: {}, // No sold products shown
+        },
       },
       include: {
         categories: {

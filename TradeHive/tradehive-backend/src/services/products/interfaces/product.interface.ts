@@ -1,4 +1,4 @@
-import { productListResponse, productRequest, productResponse } from "../../../models/products.model";
+import { productListResponse, productRequest, productResponse, UserProductsResponse } from "../../../models/products.model";
 
 /**
  * Interface for Product operations including Create, Read, Update, and Delete.
@@ -56,7 +56,8 @@ export interface IProduct {
      */
     getAllProducts(): Promise<productListResponse[] | null>;
     getProductsByUserId(userId: number): Promise<productListResponse[] | null>;
-
+    
+    getUserProducts(userId: number): Promise<UserProductsResponse | null>;
     /**
      * Accepts Rent a product.
      * @returns A promise that resolves to false if the product was not rented.

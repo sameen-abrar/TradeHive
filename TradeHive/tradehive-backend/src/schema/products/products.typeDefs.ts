@@ -8,6 +8,7 @@ export const productTypeDefs = /* GraphQL */ `
     deleteProduct(productId: Int): Boolean
     getProduct(productId: Int): productResponseModel
     getProductsByUserId(userId: Int): [ProductListResponse]
+    getUserProducts(userId: Int): userProductsResponse
   }
   type Mutation {
     addProduct(

@@ -37,3 +37,9 @@ export interface productListResponse{
   categories: string[]; // Array of related categories
   createdAt: Date
 }
+export interface UserProductsResponse {
+  bought?: productResponse[];   // List of bought products
+  sold?: productResponse[];     // List of sold products
+  borrowed?: productResponse[]; // List of borrowed products
+  lent?: productResponse[];     // List of lent products
+}

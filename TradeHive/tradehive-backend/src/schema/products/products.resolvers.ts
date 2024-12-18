@@ -35,6 +35,11 @@ export const productResolvers = {
 
       return product;
     },
+    getUserProducts: async (_: any, { userId }: { userId: number }) => {
+      const product = await _productService.getUserProducts(userId);
+
+      return product;
+    },
   },
   Mutation: {
     addProduct: async (

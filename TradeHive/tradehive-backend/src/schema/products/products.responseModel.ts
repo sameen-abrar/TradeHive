@@ -21,4 +21,11 @@ export const productResponse = /* GraphQL */ `
     createdAt: Date!
     updatedAt: Date
   }
+
+  type userProductsResponse {
+    bought: [ProductListResponse]
+    sold: [ProductListResponse]
+    borrowed: [ProductListResponse]
+    lent: [ProductListResponse]
+  }
 `;

@@ -1,0 +1,102 @@
+
+query getAll {
+  getAllProducts {
+    id
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}
+
+query getProductById($productId: Int!){
+  getProduct(productId: $productId) {
+    id
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}
+
+query getAllbyUserId($userId: Int!){
+  getProductsByUserId(userId: $userId) {
+    id
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}
+
+query DeleteProduct($productId: Int!) {
+  deleteProduct(productId: $productId)
+}
+
+query GetAllByUser($userId: Int!) {
+  getProductsByUserId(userId: $userId) {
+    id
+    title
+    description
+    price
+    rentPrice
+    rentType
+    categories
+    createdAt
+  }
+}
+
+query GetUserProducts($userId: Int!) {
+  getUserProducts(userId: $userId) {
+    bought {
+      id
+      title
+      description
+      price
+      rentPrice
+      rentType
+      categories
+      createdAt
+    }
+    sold {
+      id
+      title
+      description
+      price
+      rentPrice
+      rentType
+      categories
+      createdAt
+    }
+    borrowed {
+      id
+      title
+      description
+      price
+      rentPrice
+      rentType
+      categories
+      createdAt
+    }
+    lent {
+      id
+      title
+      description
+      price
+      rentPrice
+      rentType
+      categories
+      createdAt
+    }
+  }
+}
+

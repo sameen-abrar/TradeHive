@@ -4,6 +4,7 @@ import RegisterPage from './Register.page';
 import ProductsPage from './Products/AllProducts.page';
 import AddProductPage from './Products/AddProduct.page';
 import ProductDetailsPage from './Products/ProductDetails.page';
+import AllProductsByUser from './Products/AllProductsByUser';
 
 const router = createBrowserRouter([
   {
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
     element: <AddProductPage />,
   },
   {
-    path: '/products/:id',
+    path: '/product/:id',
     element: <ProductDetailsPage />,
+  },
+  {
+    path: '/products/:id',
+    element: <AllProductsByUser />,
   },
 ]);
 

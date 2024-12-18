@@ -3,7 +3,10 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   overwrite: true,
   schema: "http://localhost:8080/graphql",
-  documents: "src/graphql/queries/**/*.graphql", // Adjusted path to reflect the query location
+  documents: [
+    "src/graphql/queries/*.graphql",
+    "src/graphql/mutations/*.graphql"
+  ], // Adjusted path to reflect the query location
   generates: {
     "src/gql/": {
       preset: "client",

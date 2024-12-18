@@ -1,0 +1,57 @@
+scalar Date
+mutation AddProduct(
+  $title: String!
+  $description: String!
+  $price: Float!
+  $rentPrice: Float!
+  $rentType: String
+  $categoryIds: [Int!]!
+  $createdBy: Int!
+
+) {
+  addProduct(
+    title: $title
+    description: $description
+    price: $price
+    rentPrice: $rentPrice
+    rentType: $rentType
+    categoryIds: $categoryIds
+    createdBy: $createdBy
+  )
+}
+
+mutation UpdateProduct(
+  $productId: Int!
+  $title: String
+  $description: String
+  $price: Float
+  $rentPrice: Float!
+  $rentType: String
+) {
+  updateProduct(
+    productId: $productId
+    title: $title
+    description: $description
+    price: $price
+    rentPrice: $rentPrice
+    rentType: $rentType
+  )
+}
+
+mutation Rent(
+  $productId: Int!
+  $userId: Int!
+  $fromDate: Date!
+  $toDate: Date!
+) {
+  rentProduct(
+    productId: $productId
+    userId: $userId
+    fromDate: $fromDate
+    toDate: $toDate
+  )
+}
+
+mutation Buy($userId: Int!, $productId: Int!) {
+  buyProduct(userId: $userId, productId: $productId)
+}

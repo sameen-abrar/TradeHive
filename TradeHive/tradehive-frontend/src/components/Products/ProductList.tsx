@@ -1,69 +1,20 @@
-// import React from "react";
-// import { ProductListResponse } from "../../gql/graphql";
-// import { ActionIcon, Badge, Box, Card, Container, Text } from "@mantine/core";
-// import "./ProductList.css";
-// import { Link } from "react-router-dom";
-// import { IconTrash } from "@tabler/icons-react";
-
-// interface ProductListProps {
-//   products: Array<ProductListResponse>;
-// }
-
-// const ProductList: React.FC<ProductListProps> = ({ products }) => {
-//   const onDelete = (id: number) => {
-//     console.log(id);
-//   };
-
-//   const handleDeleteClick = (e: React.MouseEvent) => {
-//     e.stopPropagation(); // Prevents the link from being triggered
-//     onDelete(product.id); // Calls the onDelete function passed as prop
-//   };
-
-//   return (
-//     <Box className="Box">
-//       {products.map((product, index) => {
-//         return (
-//           <Container key={index} fluid>
-//             <Link to={`/product/${product.id}`}>
-//               <Card key={index} shadow="sm" padding="lg" className="Items">
-//                 {/* Delete icon */}
-//                 <ActionIcon
-//                   variant="light"
-//                   color="red"
-//                   onClick={handleDeleteClick}
-//                   title="Delete Product"
-//                 >
-//                   <IconTrash />
-//                 </ActionIcon>
-
-//                 <Text fw={500}>{product.title}</Text>
-//                 <div>
-//                   {product.categories.map((category, idx) => (
-//                     <Badge key={idx} color="blue" style={{ marginTop: 10 }}>
-//                       {category}
-//                     </Badge>
-//                   ))}
-//                 </div>
-//                 <Text size="sm">Price: ${product.price}</Text>
-//                 <Text size="sm">{product.description}</Text>
-//                 <Text size="sm">Date published: {product.createdAt}</Text>
-//               </Card>
-//             </Link>
-//           </Container>
-//         );
-//       })}
-//     </Box>
-//   );
-// };
-
-// export default ProductList;
 import React, { useState } from "react";
-import { ProductListResponse } from "../../gql/graphql";
-import { ActionIcon, Badge, Box, Card, Container, Text, Modal, Button } from "@mantine/core";
+import { ProductListResponse, useDeleteProductLazyQuery } from "../../gql/graphql";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Card,
+  Container,
+  Text,
+  Modal,
+  Button,
+} from "@mantine/core";
 import { Link } from "react-router-dom";
 import { IconTrash } from "@tabler/icons-react";
-import { useDeleteProductLazyQuery } from "../../gql/graphql"; // Adjust the import path based on your project structure
+import "./ProductList.css";
 
+// Define props interface
 interface ProductListProps {
   products: Array<ProductListResponse>;
 }
@@ -73,59 +24,60 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [opened, setOpened] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
+  // Handle delete icon click
   const handleDeleteClick = (e: React.MouseEvent, productId: number) => {
-    e.stopPropagation(); // Prevents the link from being triggered
-    setProductToDelete(productId); // Set the product ID for deletion
-    setOpened(true); // Open the confirmation modal
+    e.stopPropagation(); 
+    setProductToDelete(productId); 
+    setOpened(true); 
   };
 
+  // Confirm delete action
   const confirmDelete = async () => {
     if (productToDelete !== null) {
-      await deleteProduct({ variables: { productId: productToDelete } });
-      setOpened(false); // Close modal after delete
+      try {
+        await deleteProduct({ variables: { productId: productToDelete } });
+        setOpened(false); // Close modal after delete
+        // Optionally, refresh or update the product list here
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
     }
   };
 
   return (
     <Box className="Box">
-      {products.map((product, index) => {
-        return (
-          <Container key={index} fluid>
-            <Link to={`/product/${product.id}`}>
-              <Card shadow="sm" padding="lg" className="Items">
-                {/* Delete icon */}
-                <ActionIcon
-                  variant="light"
-                  color="red"
-                  onClick={(e) => handleDeleteClick(e, product.id)}
-                  title="Delete Product"
-                >
-                  <IconTrash />
-                </ActionIcon>
+      {products.map((product, index) => (
+        <Container key={index} fluid>
+          <Card shadow="sm" padding="lg" className="Items">
+            {/* Delete icon */}
+            <ActionIcon
+              variant="light"
+              color="red"
+              onClick={(e) => handleDeleteClick(e, product.id)}
+              title="Delete Product"
+            >
+              <IconTrash />
+            </ActionIcon>
 
-                <Text fw={500}>{product.title}</Text>
-                <div>
-                  {product.categories.map((category, idx) => (
-                    <Badge key={idx} color="blue" style={{ marginTop: 10 }}>
-                      {category}
-                    </Badge>
-                  ))}
-                </div>
-                <Text size="sm">Price: ${product.price}</Text>
-                <Text size="sm">{product.description}</Text>
-                <Text size="sm">Date published: {product.createdAt}</Text>
-              </Card>
+            <Link to={`/product/${product.id}`}>
+              <Text fw={500}>{product.title}</Text>
+              <div>
+                {product.categories.map((category, idx) => (
+                  <Badge key={idx} color="blue" style={{ marginTop: 10 }}>
+                    {category}
+                  </Badge>
+                ))}
+              </div>
+              <Text size="sm">Price: ${product.price}</Text>
+              <Text size="sm">{product.description}</Text>
+              <Text size="sm">Date published: {product.createdAt}</Text>
             </Link>
-          </Container>
-        );
-      })}
+          </Card>
+        </Container>
+      ))}
 
       {/* Modal for Delete Confirmation */}
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Confirm Delete"
-      >
+      <Modal opened={opened} onClose={() => setOpened(false)} title="Confirm Delete" centered>
         <Text>Are you sure you want to delete this product?</Text>
         <Button color="red" onClick={confirmDelete} loading={loading}>
           Confirm Delete

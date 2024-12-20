@@ -10,33 +10,63 @@ import {
 } from "@mantine/core"; // Mantine components for UI
 import { useGetProductByIdQuery } from "../../gql/graphql";
 import { useState } from "react";
+import { DatePickerInput } from "@mantine/dates";
 
 const ProductDetailsPage = () => {
   // Get productId from URL parameters
   const { id } = useParams();
-  console.log('product id: ', id)
-  // State to control modal visibility
-  const [opened, setOpened] = useState(false);
+  console.log("product id: ", id);
 
-  // Function to open the modal
-  const open = () => setOpened(true);
+  // State for modal visibility
+  const [buyModalOpened, setBuyModalOpened] = useState(false);
+  const [rentModalOpened, setRentModalOpened] = useState(false);
+  const [rentStartDate, setRentStartDate] = useState<Date | null>(null);
+  const [rentEndDate, setRentEndDate] = useState<Date | null>(null);
 
-  // Function to close the modal
-  const close = () => setOpened(false);
+  // Handlers for modals
+  const openBuyModal = () => setBuyModalOpened(true);
+  const closeBuyModal = () => setBuyModalOpened(false);
+
+  const openRentModal = () => setRentModalOpened(true);
+  const closeRentModal = () => setRentModalOpened(false);
+
   // Ensure the id is available before making the query
   if (!id) {
-    return <Text>Error: Product ID is missing</Text>; // Or redirect if id is required
+    return <Text>Error: Product ID is missing</Text>;
   }
-  // Use Apollo's useQuery hook to fetch the product data
+
   const { loading, error, data } = useGetProductByIdQuery({
-    variables: { productId: parseInt(id, 10) }, // Pass the productId as a variable
+    variables: { productId: parseInt(id, 10) },
   });
+
   if (loading) return <Loader />;
   if (error) return <Text>Error fetching product</Text>;
 
   const getProduct = data?.getProduct;
 
-  //   const { getProduct } = data;
+  const handleBuyConfirm = () => {
+    // Add buy logic here
+    console.log("Product bought:", getProduct?.title);
+    closeBuyModal();
+  };
+
+  const handleRentConfirm = () => {
+    if (!rentStartDate || !rentEndDate) {
+      alert("Please select both start and end dates.");
+      return;
+    }
+
+    // Add rent logic here
+    console.log(
+      "Product rented:",
+      getProduct?.title,
+      "from",
+      rentStartDate,
+      "to",
+      rentEndDate
+    );
+    closeRentModal();
+  };
 
   return (
     <Container>
@@ -59,10 +89,11 @@ const ProductDetailsPage = () => {
         <Text size="sm">
           Created at: {new Date(getProduct?.createdAt).toLocaleDateString()}
         </Text>
-        {/* Modal Component */}
+
+        {/* Buy Modal */}
         <Modal
-          opened={opened}
-          onClose={close}
+          opened={buyModalOpened}
+          onClose={closeBuyModal}
           title="Do you want to buy?"
           centered
         >
@@ -74,17 +105,45 @@ const ProductDetailsPage = () => {
               marginTop: "20px",
             }}
           >
-            <Button variant="default" onClick={close}>
+            <Button variant="default" onClick={closeBuyModal}>
               No, Cancel
             </Button>
-            <Button
-              onClick={() => {
-                // Handle buying logic here
-                close();
-              }}
-            >
-              Yes, Buy
+            <Button onClick={handleBuyConfirm}>Yes, Buy</Button>
+          </div>
+        </Modal>
+
+        {/* Rent Modal */}
+        <Modal
+          opened={rentModalOpened}
+          onClose={closeRentModal}
+          title="Rent this product"
+          centered
+        >
+          <Text>Please select the rental period:</Text>
+          <div style={{ marginTop: "20px" }}>
+            <DatePickerInput
+              label="Start Date"
+              value={rentStartDate}
+              onChange={setRentStartDate}
+            />
+            <DatePickerInput
+              label="End Date"
+              value={rentEndDate}
+              onChange={setRentEndDate}
+              style={{ marginTop: "10px" }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: "20px",
+            }}
+          >
+            <Button variant="default" onClick={closeRentModal}>
+              Cancel
             </Button>
+            <Button onClick={handleRentConfirm}>Confirm Rent</Button>
           </div>
         </Modal>
 
@@ -95,10 +154,10 @@ const ProductDetailsPage = () => {
             width: "200px",
           }}
         >
-          <Button variant="default" onClick={open}>
+          <Button variant="default" onClick={openBuyModal}>
             Buy
           </Button>
-          <Button>Sell</Button>
+          <Button onClick={openRentModal}>Rent</Button>
         </div>
       </Paper>
     </Container>

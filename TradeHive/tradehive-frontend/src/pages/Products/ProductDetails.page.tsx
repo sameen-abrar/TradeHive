@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"; // to get the productId from the URL
+import { useNavigate, useParams } from "react-router-dom"; // to get the productId from the URL
 import {
   Loader,
   Text,
@@ -7,23 +7,39 @@ import {
   Paper,
   Button,
   Modal,
+  Notification,
 } from "@mantine/core"; // Mantine components for UI
-import { useGetProductByIdQuery } from "../../gql/graphql";
+import "@mantine/dates/styles.css";
+import {
+  useBuyMutation,
+  useGetProductByIdQuery,
+  useRentMutation,
+} from "../../gql/graphql";
 import { useState } from "react";
 import { DatePickerInput } from "@mantine/dates";
 
 const ProductDetailsPage = () => {
+  const navigate = useNavigate();
   // Get productId from URL parameters
   const { id } = useParams();
-  console.log("product id: ", id);
 
-  // State for modal visibility
+  // Retrieve userId from local storage
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    return <Text>Error: User ID not found in local storage</Text>;
+  }
+
+  // API configurations
+  const [buyProductMutation, { loading: buyLoading }] = useBuyMutation();
+  const [rentProductMutation, { loading: rentLoading }] = useRentMutation();
+
+  // State for modal visibility and date selection
   const [buyModalOpened, setBuyModalOpened] = useState(false);
   const [rentModalOpened, setRentModalOpened] = useState(false);
   const [rentStartDate, setRentStartDate] = useState<Date | null>(null);
   const [rentEndDate, setRentEndDate] = useState<Date | null>(null);
 
-  // Handlers for modals
+  // Handlers for modal visibility
   const openBuyModal = () => setBuyModalOpened(true);
   const closeBuyModal = () => setBuyModalOpened(false);
 
@@ -44,28 +60,72 @@ const ProductDetailsPage = () => {
 
   const getProduct = data?.getProduct;
 
-  const handleBuyConfirm = () => {
-    // Add buy logic here
-    console.log("Product bought:", getProduct?.title);
-    closeBuyModal();
+  // Buy product logic
+  const handleBuyConfirm = async () => {
+    try {
+      await buyProductMutation({
+        variables: {
+          userId: parseInt(userId),
+          productId: parseInt(id, 10),
+        },
+      });
+      
+      closeBuyModal();      
+      navigate(`/products/${userId}`)
+      return(
+      <Notification title="Success" color="green">
+        Product bought successfully!
+      </Notification>)
+    } catch (err) {
+      return(
+      <Notification title="Error" color="red">
+        Failed to buy the product.
+      </Notification>)
+    }
   };
 
-  const handleRentConfirm = () => {
+  // Rent product logic
+  const handleRentConfirm = async () => {
     if (!rentStartDate || !rentEndDate) {
-      alert("Please select both start and end dates.");
+      <Notification title="Error" color="red">
+        Please select both start and end dates.
+      </Notification>;
+
       return;
     }
+    if (rentEndDate <= rentStartDate) {
+      return(
+      <Notification title="Error" color="red">
+        End date must be after the start date.
+      </Notification>)
+    }
+    if (rentStartDate <= new Date()) {
+      return (<Notification title="Error" color="red">
+        Start date must not be in the past.
+      </Notification>);
+    }
 
-    // Add rent logic here
-    console.log(
-      "Product rented:",
-      getProduct?.title,
-      "from",
-      rentStartDate,
-      "to",
-      rentEndDate
-    );
-    closeRentModal();
+    try {
+      await rentProductMutation({
+        variables: {
+          userId: parseInt(userId),
+          productId: parseInt(id, 10),
+          fromDate: rentStartDate.toISOString(),
+          toDate: rentEndDate.toISOString(),
+        },
+      });    
+          
+      closeRentModal();
+      
+      navigate(`/products/${userId}`)
+      return (<Notification title="Success" color="green">
+        Product rented successfully!
+      </Notification>);
+    } catch (err) {
+      return (<Notification title="Error" color="red">
+        Failed to rent the product.
+      </Notification>);
+    }
   };
 
   return (
@@ -108,7 +168,9 @@ const ProductDetailsPage = () => {
             <Button variant="default" onClick={closeBuyModal}>
               No, Cancel
             </Button>
-            <Button onClick={handleBuyConfirm}>Yes, Buy</Button>
+            <Button onClick={handleBuyConfirm} loading={buyLoading}>
+              Yes, Buy
+            </Button>
           </div>
         </Modal>
 
@@ -122,15 +184,19 @@ const ProductDetailsPage = () => {
           <Text>Please select the rental period:</Text>
           <div style={{ marginTop: "20px" }}>
             <DatePickerInput
-              label="Start Date"
+              label="Start date"              
+              placeholder="Start date"
               value={rentStartDate}
               onChange={setRentStartDate}
+              minDate={new Date()}
             />
             <DatePickerInput
-              label="End Date"
+              label="End date"
+              placeholder="End date"
               value={rentEndDate}
               onChange={setRentEndDate}
               style={{ marginTop: "10px" }}
+              minDate={rentStartDate ?? new Date()}
             />
           </div>
           <div
@@ -143,7 +209,9 @@ const ProductDetailsPage = () => {
             <Button variant="default" onClick={closeRentModal}>
               Cancel
             </Button>
-            <Button onClick={handleRentConfirm}>Confirm Rent</Button>
+            <Button onClick={handleRentConfirm} loading={rentLoading}>
+              Confirm Rent
+            </Button>
           </div>
         </Modal>
 

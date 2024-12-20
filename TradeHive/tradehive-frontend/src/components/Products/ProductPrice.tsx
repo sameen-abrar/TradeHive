@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Select, SimpleGrid, TextInput, Title } from "@mantine/core";
 import "./ProductList.css";
-import { ProductFormData } from "./ProductTitle";
+import { ProductFormData } from "../../shared/addProductFormData";
 
 interface Props {
   data: { price: string, rentPrice: string , rentType: string};

@@ -5,9 +5,14 @@ import {
   Button,
   Box,
   SimpleGrid,
+  Notification,
 } from "@mantine/core";
+import { useRegisterMutationMutation } from "../../gql/graphql";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
@@ -16,10 +21,47 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [registerMutation, { loading, error, data }] =
+    useRegisterMutationMutation();
+
+  if (loading) return <p>Loading...</p>;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
+    // Handle register logic here
+    if (password !== cpassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    try {
+      await registerMutation({
+        variables: {
+          firstName,
+          lastName,
+          email,
+          phone,
+          password,
+          address,
+        },
+      });
+      alert("Registration Successful: " + data?.register);
+
+      // Reset form fields if necessary
+      setFirstName("");
+      setLastName("");
+      setAddress("");
+      setEmail("");
+      setPhone("");
+      setPassword("");
+      setCPassword("");
+    } catch (e) {
+      console.error("Registration failed", e);
+    }
   };
+
+  if(data?.register){
+    navigate(`/`);
+  }
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -44,11 +86,11 @@ const RegisterForm = () => {
       </SimpleGrid>
 
       <TextInput
-            label="Address"
-            placeholder="Talent Rd, Explorer"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
+        label="Address"
+        placeholder="Talent Rd, Explorer"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
 
       <SimpleGrid cols={2} spacing={"sm"}>
         <div>
@@ -88,6 +130,12 @@ const RegisterForm = () => {
       <Button type="submit" fullWidth mt="xl">
         Create Account
       </Button>
+
+      {error && (
+        <Notification color="red" title="Registration Error">
+          {error.message}
+        </Notification>
+      )}
     </Box>
   );
 };

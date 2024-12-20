@@ -5,15 +5,7 @@ import {
   Title,
 } from "@mantine/core";
 import "./ProductList.css";
-
-export interface ProductFormData {
-  title: string;
-  category: string[];
-  price: string;
-  description: string;
-  rentPrice: string;
-  rentType: string;
-}
+import { ProductFormData } from "../../shared/addProductFormData";
 
 interface TitleProps {
   data: { title: string };

@@ -1,11 +1,12 @@
 import React from "react";
-import { ProductListResponse, useGetAllByUserQuery } from "../../gql/graphql.ts";
-import ProductList from "../../components/Products/ProductList.tsx";
-import { useParams } from "react-router-dom";
 import {
-  Text,
-} from "@mantine/core";
-
+  ProductListResponse,
+  useGetAllByUserQuery,
+} from "../../gql/graphql.ts";
+import ProductList from "../../components/Products/ProductList.tsx";
+import { Link, useParams } from "react-router-dom";
+import { ActionIcon, Text } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 
 const AllProductsByUser: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +14,7 @@ const AllProductsByUser: React.FC = () => {
     return <Text>Error: User ID is missing in the URL.</Text>;
   }
   const { data, loading, error } = useGetAllByUserQuery({
-    variables: { userId: parseInt(id, 10) }
+    variables: { userId: parseInt(id, 10) },
   });
 
   if (loading) return <p>Loading...</p>;
@@ -31,6 +32,13 @@ const AllProductsByUser: React.FC = () => {
   return (
     <div style={{ marginBottom: 20 }}>
       <h1>Products</h1>
+      {/* Delete icon */}
+      <Link to="/products/add">
+        <ActionIcon variant="light" color="red" title="Delete Product">
+          <IconPlus />
+        </ActionIcon>
+        Add product
+      </Link>
       {data && data.getProductsByUserId ? (
         <ProductList products={products} />
       ) : (

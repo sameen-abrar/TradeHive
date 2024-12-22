@@ -5,7 +5,7 @@ import {
   Title,
 } from "@mantine/core";
 import "./ProductList.css";
-import { ProductFormData } from "../../shared/addProductFormData";
+import { ProductFormData } from "../../shared/ProductFormData";
 
 interface TitleProps {
   data: { title: string };

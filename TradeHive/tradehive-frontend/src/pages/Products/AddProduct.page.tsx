@@ -5,6 +5,7 @@ import { Button, Group, Stepper, Notification, Text } from "@mantine/core";
 import ProductDescription from "../../components/Products/ProductDescription";
 import ProductPrice from "../../components/Products/ProductPrice";
 import { useAddProductMutation } from "../../gql/graphql";
+import { categories } from "../../shared/ProductFormData";
 
 const AddProductPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -17,15 +18,17 @@ const AddProductPage: React.FC = () => {
   });
 
   const userId = localStorage.getItem("userId");
-    if (!userId) {
-      return <Text>Error: User ID not found in local storage</Text>;
-    }
+  if (!userId) {
+    return <Text>Error: User ID not found in local storage</Text>;
+  }
 
   const [addProductMutation, { loading, error }] = useAddProductMutation();
 
   const [active, setActive] = useState(0);
-  const nextStep = () => setActive((current) => (current < 3 ? current + 1 : 4));
-  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : 0));
+  const nextStep = () =>
+    setActive((current) => (current < 3 ? current + 1 : 4));
+  const prevStep = () =>
+    setActive((current) => (current > 0 ? current - 1 : 0));
 
   const handleAddProduct = async () => {
     const confirmed = window.confirm(
@@ -74,7 +77,14 @@ const AddProductPage: React.FC = () => {
               <strong>Title:</strong> {formData.title}
             </p>
             <p>
-              <strong>Category:</strong> {formData.category.join(", ")}
+              <strong>Category:</strong>{" "}
+              {formData.category
+                .map(
+                  (val) =>
+                    categories.find((cat) => cat.value === val.toString())
+                      ?.label
+                )
+                .join(", ")}
             </p>
             <p>
               <strong>Price:</strong> {formData.price}

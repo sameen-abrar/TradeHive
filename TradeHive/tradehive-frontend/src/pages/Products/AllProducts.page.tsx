@@ -1,7 +1,7 @@
 import React from "react";
 import { ProductListResponse, useGetAllQuery } from "../../gql/graphql.ts";
 import ProductList from "../../components/Products/ProductList.tsx";
-
+import { Title } from "@mantine/core";
 
 const ProductsPage: React.FC = () => {
   const { data, loading, error } = useGetAllQuery();
@@ -20,7 +20,7 @@ const ProductsPage: React.FC = () => {
   console.log(products);
   return (
     <div style={{ marginBottom: 20 }}>
-      <h1>Products</h1>
+      <Title style={{ textAlign: "center" }}>Products</Title>
       {data && data.getAllProducts ? (
         <ProductList products={products} />
       ) : (

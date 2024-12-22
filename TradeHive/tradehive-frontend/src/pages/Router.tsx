@@ -5,6 +5,7 @@ import ProductsPage from './Products/AllProducts.page';
 import AddProductPage from './Products/AddProduct.page';
 import ProductDetailsPage from './Products/ProductDetails.page';
 import AllProductsByUser from './Products/AllProductsByUser';
+import FilteredProductsByUser from './Products/FilteredProductsByUser.page';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: '/products/:id',
     element: <AllProductsByUser />,
+  },  
+  {
+    path: '/products/filtered',
+    element: <FilteredProductsByUser />,
   },
 ]);
 

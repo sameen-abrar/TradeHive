@@ -29,7 +29,7 @@ const LoginForm = () => {
     // Store userId in localStorage
     localStorage.setItem('userId', userId.toString());
     // Store userId or perform other login actions (e.g., redirect)
-    navigate(`/products/${userId}`);
+    navigate(`/products/by/user`);
   }
   return (
     <Box component="form" onSubmit={handleSubmit}>

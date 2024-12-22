@@ -71,7 +71,7 @@ const ProductDetailsPage = () => {
       });
       
       closeBuyModal();      
-      navigate(`/products/${userId}`)
+      navigate(`/products/by/user`)
       return(
       <Notification title="Success" color="green">
         Product bought successfully!
@@ -117,7 +117,7 @@ const ProductDetailsPage = () => {
           
       closeRentModal();
       
-      navigate(`/products/${userId}`)
+      navigate(`/products/by/user`)
       return (<Notification title="Success" color="green">
         Product rented successfully!
       </Notification>);

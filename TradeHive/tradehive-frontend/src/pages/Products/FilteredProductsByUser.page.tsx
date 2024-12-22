@@ -29,6 +29,7 @@ export default function FilteredProductsByUser() {
     variables: {
       userId: parseInt(userId),
     },
+    fetchPolicy: "network-only",
   });
 
   //   const { bought, sold, borrowed, lent } = data?.getUserProducts || {};

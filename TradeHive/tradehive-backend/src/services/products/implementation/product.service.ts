@@ -330,6 +330,16 @@ export class productService implements IProductService {
   }
   async deleteProduct(productId: number): Promise<boolean> {
     try {
+      await prisma.invoice.deleteMany({
+        where: {
+          productId: productId,
+        },
+      });
+      await prisma.rentalBooking.deleteMany({
+        where: {
+          productId: productId,
+        },
+      });
       await prisma.productCategory.deleteMany({
         where: {
           productId: productId,

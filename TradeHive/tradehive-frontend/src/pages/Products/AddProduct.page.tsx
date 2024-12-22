@@ -6,8 +6,10 @@ import ProductDescription from "../../components/Products/ProductDescription";
 import ProductPrice from "../../components/Products/ProductPrice";
 import { useAddProductMutation } from "../../gql/graphql";
 import { categories } from "../../shared/ProductFormData";
+import { useNavigate } from "react-router-dom";
 
 const AddProductPage: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     category: [] as number[],
@@ -49,6 +51,7 @@ const AddProductPage: React.FC = () => {
         },
       });
       alert("Product added successfully!");
+      navigate('/products/by/user')
       // Optionally, reset the form or navigate to another page
     } catch (e) {
       console.error("Error adding product", e);

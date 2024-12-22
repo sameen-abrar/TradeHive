@@ -4,17 +4,19 @@ import {
   useGetAllByUserQuery,
 } from "../../gql/graphql.ts";
 import ProductList from "../../components/Products/ProductList.tsx";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ActionIcon, Text } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
 const AllProductsByUser: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const id = localStorage.getItem("userId")
+
   if (!id) {
     return <Text>Error: User ID is missing in the URL.</Text>;
   }
   const { data, loading, error } = useGetAllByUserQuery({
     variables: { userId: parseInt(id, 10) },
+    fetchPolicy: "network-only",
   });
 
   if (loading) return <p>Loading...</p>;

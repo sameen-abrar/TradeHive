@@ -24,9 +24,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [opened, setOpened] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
 
+  console.log(products)
+
   // Handle delete icon click
   const handleDeleteClick = (e: React.MouseEvent, productId: number) => {
     e.stopPropagation(); 
+    console.log("to delete: ", productId)
     setProductToDelete(productId); 
     setOpened(true); 
   };
@@ -38,6 +41,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         await deleteProduct({ variables: { productId: productToDelete } });
         setOpened(false); // Close modal after delete
         // Optionally, refresh or update the product list here
+        window.location.reload()
       } catch (error) {
         console.error("Error deleting product:", error);
       }
@@ -59,7 +63,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               <IconTrash />
             </ActionIcon>
 
-            <Link to={`/product/${product.id}`}>
+            <Link to={`/product/${product.id}`} style={{ textDecoration: 'none' }}>
               <Text fw={500}>{product.title}</Text>
               <div>
                 {product.categories.map((category, idx) => (

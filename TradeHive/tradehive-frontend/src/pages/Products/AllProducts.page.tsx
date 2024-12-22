@@ -4,7 +4,9 @@ import ProductList from "../../components/Products/ProductList.tsx";
 import { Title } from "@mantine/core";
 
 const ProductsPage: React.FC = () => {
-  const { data, loading, error } = useGetAllQuery();
+  const { data, loading, error } = useGetAllQuery({    
+    fetchPolicy: "network-only",
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;

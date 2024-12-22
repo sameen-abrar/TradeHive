@@ -62,18 +62,18 @@ export class productService implements IProductService {
       ]);
 
       // Helper function to format products
-      const formatProduct = (data: any): productResponse => ({
-        id: data.product?.id || data.id,
-        title: data.product?.title || data.title,
-        description: data.product?.description || "",
-        price: data.product?.price || 0,
-        rentPrice: data.product?.rentPrice || 0,
-        rentType: data.product?.rentType || "",
+      const formatProduct = (product: any): productResponse => ({
+        id: product?.id || product.id,
+        title: product?.title || product.title,
+        description: product?.description || "",
+        price: product?.price || 0,
+        rentPrice: product?.rentPrice || 0,
+        rentType: product?.rentType || "",
         categories:
-          data.product?.categories?.map((cat: any) => cat.category.name) || [],
-        createdBy: data.product?.createdBy || data.createdBy || 0,
-        createdAt: data.product?.createdAt || data.createdAt,
-        updatedAt: data.product?.updatedAt || data.updatedAt,
+          product?.categories?.map((cat: any) => cat.category.name) || [],
+        createdBy: product?.createdBy|| 0,
+        createdAt: product?.createdAt,
+        updatedAt: product?.updatedAt,
       });
 
       // Organize response

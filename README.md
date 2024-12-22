@@ -3,7 +3,7 @@
 TradeHive is a busy marketplace platform buzzing with activity.
 
 ## Loom Video Demonstration
-[Video Demo of the project](https://www.loom.com/share/6adb5da52f7f424788878dd26d806699?sid=796a753b-d17c-4a4e-82bb-f6d4e0233262)
+[Video Demo of the project](https://www.loom.com/share/7206ebe4a097460fa06704c071aa96c7?sid=53d12f6f-ac22-4bde-be71-8d0664ac7163)
 
 ---
 

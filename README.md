@@ -2,7 +2,7 @@
 
 TradeHive is a busy marketplace platform buzzing with activity.
 
-## Loom Video Walkthrough
+## Loom Video Demonstration
 [Video Demo of the project](https://www.loom.com/share/6adb5da52f7f424788878dd26d806699?sid=796a753b-d17c-4a4e-82bb-f6d4e0233262)
 
 ---
@@ -19,13 +19,17 @@ TradeHive is a busy marketplace platform buzzing with activity.
    ```bash
    docker compose up
    ```
+3. Sync the database with the application:
+   ```bash
+   npx prisma migrate dev
+   ```
 
-3. Seed the database with categories:
+4. Seed the database with categories:
    ```bash
    npx ts-node prisma/seed.ts
    ```
 
-4. Start the backend server:
+5. Start the backend server:
    ```bash
    npm run dev
    ```

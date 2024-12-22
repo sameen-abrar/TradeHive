@@ -31,6 +31,8 @@ This document provides a comprehensive explanation of the implementation process
 - **Data Modeling**:
   - Products are linked to categories, allowing multiple category associations per product.
   - Categories include: ELECTRONICS, FURNITURE, HOME APPLIANCES, SPORTING GOODS, OUTDOOR, and TOYS.
+- **Categorized View**:
+  - Products bought, Sold, Lent or borrowed by users shown in tabular format.
 
 ## Part 3: Advanced Features
 
@@ -52,8 +54,8 @@ This document provides a comprehensive explanation of the implementation process
   - 
 - **Error Handling**:
   - Comprehensive error messages for both frontend and backend failures.
-- **Concurrent Updates**:
-  - Resolved conflicts with transactions by locking relevant database rows during updates.
+- **Date selection**:
+  - User cannot select past dates or set the to date before from date.
 
 ## Folder Structure
 
@@ -66,9 +68,10 @@ TradeHive/
 |       |-- components/ (Reusable React components)
 |       |-- pages/ (Route-level components)
 |       |-- graphql/ (GraphQL queries and mutations)
+|       |-- gql/ (Codegen generated functions)
 |-- backend/
 |   |-- src/
-|       |-- resolvers/ (GraphQL resolvers)
+|       |-- services/ (Handles business logic)
 |       |-- schema/ (GraphQL type definitions)
 |       |-- models/ (Prisma models)
 |-- prisma/ (Schema and migrations)
